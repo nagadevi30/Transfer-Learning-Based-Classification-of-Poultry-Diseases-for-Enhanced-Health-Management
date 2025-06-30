@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Prediction Page</title>
+  <link rel="stylesheet" href="predict.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <i class="fas fa-camera logo-icon"></i> Poultry Detect
+    </div>
+
+    <nav>
+      <ul class="nav-links">
+        <li><a href="index.html">HOME</a></li>
+        <li><a href="#" class="active">PREDICTION PAGE</a></li>
+      </ul>
+    </nav>
+
+    <div class="social-icons">
+      <a href="https://twitter.com/" target="_blank"><i class="fab fa-twitter"></i></a>
+      <a href="https://facebook.com/" target="_blank"><i class="fab fa-facebook-f"></i></a>
+      <a href="https://instagram.com/" target="_blank"><i class="fab fa-instagram"></i></a>
+      <a href="https://linkedin.com/" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+    </div>
+  </header>
+
+  <section class="prediction-section">
+    <h1>Prediction</h1>
+    <h2>Image Classification</h2>
+
+    <!-- Upload Form -->
+    <form action="/predict" method="POST" enctype="multipart/form-data" class="upload-form">
+      <div class="input-row">
+        <label for="imageUpload">Upload Your Image :</label>
+        <input type="file" name="image" id="imageUpload" accept="image/*" required />
+      </div>
+      <button type="submit" class="btn predict-btn">predict</button>
+    </form>
+
+    <!-- Prediction Result -->
+    <div class="result-text">
+      <p>Hence , The infection type detected as 
+        {% if result %}
+          <strong style="color: #00ff88;">{{ result }}</strong>
+        {% endif %}
+      </p>
+    </div>
+
+    <!-- Optional: Display uploaded image -->
+    {% if image_path %}
+    <div class="image-preview">
+      <img src="{{ image_path }}" alt="Uploaded Image" width="250" />
+    </div>
+    {% endif %}
+  </section>
+</body>
+</html>
