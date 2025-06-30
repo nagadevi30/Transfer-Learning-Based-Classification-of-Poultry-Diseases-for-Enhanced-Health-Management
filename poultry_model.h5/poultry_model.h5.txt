@@ -1,0 +1,52 @@
+import os
+import numpy as np
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
+from tensorflow.keras.applications import InceptionV3
+from tensorflow.keras import layers, models
+
+# Adjust the path below to your dataset folder
+dataset_dir = 'datasets/'
+
+# Preprocess the images
+train_datagen = ImageDataGenerator(
+    rescale=1./255,
+    validation_split=0.2
+)
+
+train_generator = train_datagen.flow_from_directory(
+    dataset_dir,
+    target_size=(150, 150),
+    batch_size=32,
+    class_mode='categorical',
+    subset='training'
+)
+
+validation_generator = train_datagen.flow_from_directory(
+    dataset_dir,
+    target_size=(150, 150),
+    batch_size=32,
+    class_mode='categorical',
+    subset='validation'
+)
+
+# Load a pre-trained model, e.g., InceptionV3
+base_model = InceptionV3(weights='imagenet', include_top=False, input_shape=(150, 150, 3))
+
+# Freeze base layers
+for layer in base_model.layers:
+    layer.trainable = False
+
+# Define custom classification model
+model = models.Sequential()
+model.add(base_model)
+model.add(layers.GlobalAveragePooling2D())
+model.add(layers.Dense(4, activation='softmax'))  # Assuming 4 classes
+
+# Compile the model
+model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+
+# Train the model
+model.fit(train_generator, validation_data=validation_generator, epochs=10)
+
+# Save the model
+model.save('model/poultry_model.h5')
